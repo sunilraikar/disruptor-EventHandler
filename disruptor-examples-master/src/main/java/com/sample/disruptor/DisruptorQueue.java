@@ -1,6 +1,6 @@
 package com.sample.disruptor;
 
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadFactory;
 
 import com.lmax.disruptor.EventFactory;
 import com.lmax.disruptor.EventHandler;
@@ -13,8 +13,8 @@ public class DisruptorQueue<T> {
 
 	private Disruptor<T> disruptor;
 	@SuppressWarnings("unchecked")
-	DisruptorQueue(EventFactory<T> eventFactory,int bufferSize,ExecutorService exec,ProducerType producerType,WaitStrategy waitStrategy,EventHandler<T> validationHandler,EventHandler<T> businesshandler){
-		disruptor=new Disruptor<T>(eventFactory, bufferSize,exec, producerType,waitStrategy );
+	DisruptorQueue(EventFactory<T> eventFactory,int bufferSize,ThreadFactory customThreadfactory,ProducerType producerType,WaitStrategy waitStrategy,EventHandler<T> validationHandler,EventHandler<T> businesshandler){
+		disruptor=new Disruptor<T>(eventFactory, bufferSize,customThreadfactory, producerType,waitStrategy );
 		disruptor.handleEventsWith(validationHandler).then(businesshandler);
 	}
 	

@@ -3,7 +3,8 @@ package com.sample.disruptor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class CustomThreadFactoryBuilder {
+public class CustomThreadFactoryBuilder{
+	final static AtomicLong count = new AtomicLong(1);
 	private String namePrefix = null;
 	private boolean daemon = false;
 	private int priority = Thread.NORM_PRIORITY;
@@ -42,7 +43,6 @@ public class CustomThreadFactoryBuilder {
 		final Boolean daemon = builder.daemon;
 		final Integer priority = builder.priority;
 
-		final AtomicLong count = new AtomicLong(0);
 
 		return new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {

@@ -18,14 +18,16 @@ public class Producer<T> implements Runnable{
 	}
 	
 	public void produce() throws InterruptedException{
-		for (int i = startingSeq;;i+=incrementalValue) {
+		for (int i = startingSeq;i<10;i+=incrementalValue) {
 //			System.out.println("Produced "+i);
             long seq = ringBuffer.next();
             ValueEvent valueEvent = (ValueEvent) ringBuffer.get(seq);
             valueEvent.setValue(i);
             valueEvent.setProducerIdentifier(producerIdentifier);
             ringBuffer.publish(seq);
-//            System.out.println("Publisher--> Sequence :"+seq+" Value :"+i);
+            System.out.println("****************************************************************************************");
+            System.out.println("Publisher**> Sequence :"+seq+" Value :"+i);
+            System.out.println("****************************************************************************************");
             Thread.sleep(wait);
         }
 	}

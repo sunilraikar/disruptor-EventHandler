@@ -10,20 +10,19 @@ import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.ProducerType;
 
 public class Simple {
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws InterruptedException {
 		ThreadFactory customThreadfactory = new CustomThreadFactoryBuilder()
 												.setNamePrefix("DemoPool-Thread").setDaemon(false)
 												.setPriority(Thread.MAX_PRIORITY).build();
 		
-		ExecutorService exec = Executors.newFixedThreadPool(2,customThreadfactory);
+		ExecutorService exec = Executors.newFixedThreadPool(4,customThreadfactory);
 		ExecutorService prod_exec = Executors.newFixedThreadPool(2);
 		// Preallocate RingBuffer with 1024 ValueEvents
-		final EventHandler<ValueEvent> handler = new ValidationEventHandler<ValueEvent>();
-		final BusinessLogicEventHandler<ValueEvent> sleepEventHandler=new BusinessLogicEventHandler<ValueEvent>();
+		final EventHandler<ValueEvent> handler = new ValidationEventHandler<ValueEvent>("Initial Event 1");
+		final BusinessLogicEventHandler<ValueEvent> sleepEventHandler=new BusinessLogicEventHandler<ValueEvent>("Initial Event 2");
 		
 		DisruptorQueue<ValueEvent> disruptor = new DisruptorQueue<ValueEvent>(
-												ValueEvent.EVENT_FACTORY, 4, exec, ProducerType.SINGLE,
+												ValueEvent.EVENT_FACTORY, 4, customThreadfactory, ProducerType.MULTI,
 												new BlockingWaitStrategy(), handler,sleepEventHandler);
 
 		RingBuffer<ValueEvent> ringBuffer = disruptor.start();
